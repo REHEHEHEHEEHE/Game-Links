@@ -305,6 +305,33 @@
         </p>
     </div>
 
+     NAME GATEKEEPER SCRIPT -->
+<script>
+    // 1. Put the allowed names inside the square brackets (keep them lowercase)
+    var allowedNames = ["admin" "felix" james" "angus" "oliver" "xavier" "charlie" "abel" "george"];
+
+    // 2. This pops up a box on the screen asking for a name
+    var visitorName = prompt("Please enter your first name, no capitals, and if someone else also has your name, just put your first name. If you can't get in, contact the email on the right side of the screen:");
+
+    // 3. Check if the user clicked cancel or left it empty
+    if (visitorName === null || visitorName.trim() === "") {
+        alert("Access Denied. You must enter a name.");
+        document.body.innerHTML = "<h1 style='font-family:sans-serif; text-align:center; margin-top:100px;'>🔒 Access Denied</h1>";
+    } else {
+        // 4. Clean up the typed name so capitalization doesn't matter
+        var cleanedName = visitorName.trim().toLowerCase();
+
+        // 5. Check if the name is in your approved list
+        if (allowedNames.includes(cleanedName)) {
+            alert("Welcome, " + visitorName + "!");
+        } else {
+            // 6. If the name is NOT allowed, wipe out the website content
+            alert("Sorry, " + visitorName + ", your name is not on the guest list.");
+            document.body.innerHTML = "<h1 style='font-family:sans-serif; text-align:center; margin-top:100px;'>🔒 Access Denied</h1>";
+        }
+    }
+</script>
+
 
 
 </body>
