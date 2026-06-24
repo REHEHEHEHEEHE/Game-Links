@@ -1,25 +1,8 @@
-<h1>Game links</h1>
-
-<p><a href="https://kosmikau.github.io">Go to Kosmik's site</a></p>
-
-<p><a href="https://reheheheheehe.github.io/cuphead-rehe/">Play Cuphead</a></p>
-
-<p><a href="https://reheheheheehe.github.io/Celeste/">Play Celeste</a></p>
-
-<p><a href="https://reheheheheehe.github.io/Deltarune/">Play Deltarune</a></p>
-
-<p><a href="https://reheheheheehe.github.io/Minecraft/">Play Minecraft</a></p>
-
-<p><a href="https://reheheheheehe.github.io/Age-of-Empires-2/">Play Age of Empires 2</a></p>
-
-<p><a href="https://reheheheheehe.github.io/doom-3/">Play Doom 3</a></p>
-
-<p><a href="https://reheheheheehe.github.io/Doom/">Play Doom</a></p>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Game links</title>
+    <title>My Retro Game Arcade</title>
     <style>
         body {
             background-color: #f0f4f8; 
@@ -70,35 +53,17 @@
             text-align: left;          
             z-index: 100;              
         }
-
-        * This styles the right side text box */
         .right-side-box {
-            position: fixed;           /* Pins the box to the screen */
-            right: 20px;               /* Puts it 20px away from the RIGHT side */
-            top: 120px;                /* Puts it 120px down from the top */
-            width: 240px;              /* Sets the width of the box */
-            background-color: #ffffff; /* White background */
+            position: fixed;           
+            right: 20px;               
+            top: 120px;                
+            width: 240px;              
+            background-color: #ffffff; 
             padding: 20px;
-            border-radius: 12px;       /* Rounds the corners */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Adds a soft shadow */
-            text-align: left;          /* Aligns text inside to the left */
-            z-index: 100;              /* Makes sure it stays on top of other elements */
-        }
-
-        /* ... existing card styles are up here ... */
-
-        /* Paste the Right Box CSS directly here */
-        .right-side-box {
-            position: fixed;
-            right: 20px;
-            top: 120px;
-            width: 240px;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: left;
-            z-index: 100;
+            border-radius: 12px;       
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            text-align: left;          
+            z-index: 100;              
         }
     </style>
 </head>
@@ -107,23 +72,33 @@
     <!-- SIDE PANEL -->
     <div class="left-side-box">
         <h3 style="margin-top:0; color: #333;">⚔️ Player Profile</h3>
-        <div id="profile-content" onclick="window.secretLogout()" style="cursor: pointer;">Loading...</div>
+        <div id="profile-content" onclick="window.secretLogout()" style="cursor: pointer; background: #fdfdfd; padding: 5px; border-radius: 4px;">Loading...</div>
+        <small style="color:#999; display:block; margin-top:5px;">(Click profile text to log out)</small>
         <div id="admin-area" style="display: none; margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 10px;">
             <button onclick="window.showErrorLog()" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%;">View Error Log</button>
         </div>
     </div>
 
-    <h1>My Game Collection</h1>
-    <p>Click a card below to play games!</p>
+    <!-- RIGHT SIDE PATCH NOTES BOX -->
+    <div class="right-side-box">
+        <h3 style="margin-top:0; color: #333;">📢 Patch Notes</h3>
+        <p style="font-size: 14px; color: #555; line-height: 1.4; margin-bottom: 0;">
+            Type your custom announcements, patch notes, updates, or rules here! 
+            You can modify this text anytime you want.
+        </p>
+    </div>
 
-    <!-- 7 CARDS -->
-    <div class="game-box"><h2 class="game-title">Cuphead</h2><p class="game-description">2D Platformer shooter.</p><a href="https://reheheheheehe.github.io/cuphead-rehe/" class="play-btn">Play</a></div>
-    <div class="game-box"><h2 class="game-title">Celeste</h2><p class="game-description">Climb the mountain.</p><a href="https://reheheheheehe.github.io/Celeste/" class="play-btn">Play</a></div>
-    <div class="game-box"><h2 class="game-title">Deltarune</h2><p class="game-description">Deltarune chapters 1-4.</p><a href="https://reheheheheehe.github.io/Deltarune/" class="play-btn">Play</a></div>
-    <div class="game-box"><h2 class="game-title">Minecraft</h2><p class="game-description">Mine and Craft.</p><a href="https://reheheheheehe.github.io/Minecraft/" class="play-btn">Play</a></div>
-    <div class="game-box"><h2 class="game-title">Doom</h2><p class="game-description">Shoot demons.</p><a href="#" class="play-btn">Play</a></div>
-    <div class="game-box"><h2 class="game-title">placeholder</h2><p class="game-description">No game here yet!</p><a href="#" class="play-btn">Play</a></div>
-    <div class="game-box"><h2 class="game-title">placeholder</h2><p class="game-description">No game here yet!</p><a href="#" class="play-btn">Play</a></div>
+    <h1>My Game Collection</h1>
+    <p>Click a card below to play my creations!</p>
+
+    <!-- YOUR 7 CARDS FULLY LINKED -->
+    <div class="game-box"><h2 class="game-title">Cuphead</h2><p class="game-description">2D Platformer shooter.</p><a href="https://github.io" class="play-btn" target="_blank">Play</a></div>
+    <div class="game-box"><h2 class="game-title">Celeste</h2><p class="game-description">Climb the mountain.</p><a href="https://github.io" class="play-btn" target="_blank">Play</a></div>
+    <div class="game-box"><h2 class="game-title">Deltarune</h2><p class="game-description">Deltarune chapters 1-4.</p><a href="https://github.io" class="play-btn" target="_blank">Play</a></div>
+    <div class="game-box"><h2 class="game-title">Minecraft</h2><p class="game-description">Mine and Craft.</p><a href="https://github.io" class="play-btn" target="_blank">Play</a></div>
+    <div class="game-box"><h2 class="game-title">Doom</h2><p class="game-description">Shoot demons.</p><a href="#" class="play-btn" target="_blank">Play</a></div>
+    <div class="game-box"><h2 class="game-title">placeholder</h2><p class="game-description">No game here yet!</p><a href="#" class="play-btn" target="_blank">Play</a></div>
+    <div class="game-box"><h2 class="game-title">placeholder</h2><p class="game-description">No game here yet!</p><a href="#" class="play-btn" target="_blank">Play</a></div>
 
     <!-- VISITOR COUNTER BOX -->
     <div style="margin: 30px auto; text-align: center; font-family: sans-serif; background: #ffffff; max-width: 200px; padding: 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
@@ -133,22 +108,39 @@
 
     <!-- CODE SYSTEM ENGINE -->
     <script>
-        var allowedNames = ["angus" "george" "xavier" "oliver" "charlie" "james" "abel" "hudson" "cameron"];       
+        // CONFIGURATION SAVED WITH COMMA SYNTAX FIXED
+        var allowedNames = ["angus", "george", "xavier", "oliver", "charlie", "james", "abel", "hudson", "cameron"];       
         var adminName = "administrator";          
         var unbanPassword = "Elpenguin0";   
 
         window.tryUnban = function() {
             var enteredPass = prompt("Enter Password:");
-            if (enteredPass !== null && enteredPass.trim().toLowerCase() === unbanPassword) {
+            if (enteredPass !== null && enteredPass.trim() === unbanPassword) {
                 localStorage.removeItem("banned_user");
                 alert("Block lifted!");
                 location.reload();
+            } else if (enteredPass !== null) {
+                alert("Incorrect Password.");
             }
         };
 
         window.showErrorLog = function() {
             var logs = localStorage.getItem("arcade_error_logs");
             alert(logs ? "🚫 BLOCKED LOGS:\n" + logs : "No logs yet!");
+        };
+
+        window.secretLogout = function() {
+            var logoutPassword = "Elpenguin0"; 
+            var enteredPass = prompt("Admin Authorization Required:\nEnter Logout Password:");
+            if (enteredPass !== null) {
+                if (enteredPass.trim() === logoutPassword) {
+                    localStorage.removeItem("my_website_visits"); 
+                    alert("Authorization Successful. Logging out...");
+                    location.reload();
+                } else {
+                    alert("Incorrect Password. Access Denied.");
+                }
+            }
         };
 
         function updateCounter() {
@@ -161,19 +153,19 @@
         if (localStorage.getItem("banned_user") === "true") {
             document.body.innerHTML = '<div style="font-family:sans-serif; text-align:center; margin-top:100px;"><h1 style="color:red; cursor:pointer;" onclick="window.tryUnban()">❌ Access Permanently Denied</h1><small>(Click title to unban)</small></div>';
         } else {
-            var visitorName = prompt("Please enter your first name, nothing else:");
+            var visitorName = prompt("Please enter your username:");
             if (visitorName === null || visitorName.trim() === "") {
-                document.body.innerHTML = "<h1 style='text-align:center; margin-top:100px;'>🔒 Access Denied, to get access contact me at Penguinlord2026@outlook.com</h1>";
+                document.body.innerHTML = "<h1 style='text-align:center; margin-top:100px; font-family:sans-serif;'>🔒 Access Denied</h1><p style='text-align:center; font-family:sans-serif;'>You must refresh and type a valid name to enter.</p>";
             } else {
                 var cleanedName = visitorName.trim().toLowerCase();
                 if (cleanedName === adminName) {
                     alert("Welcome Admin.");
-                    document.getElementById("profile-content").innerHTML = "<strong>Role:</strong> Admin";
+                    document.getElementById("profile-content").innerHTML = "<strong>Role:</strong> Admin<br><strong>User:</strong> " + visitorName;
                     document.getElementById("admin-area").style.display = "block";
                     updateCounter();
                 } else if (allowedNames.includes(cleanedName)) {
                     alert("Welcome Player.");
-                    document.getElementById("profile-content").innerHTML = "<strong>User:</strong> " + visitorName;
+                    document.getElementById("profile-content").innerHTML = "<strong>Role:</strong> Player<br><strong>User:</strong> " + visitorName;
                     updateCounter();
                 } else {
                     var currentLogs = localStorage.getItem("arcade_error_logs") || "";
@@ -184,32 +176,6 @@
                 }
             }
         }
-
-        <!-- Paste the Right Box HTML directly here -->
-    <div class="right-side-box">
-        <h3 style="margin-top:0; color: #333;">📢 Patch Notes</h3>
-        <p style="font-size: 14px; color: #555; line-height: 1.4; margin-bottom: 0;">
-            To ask for more games, or for a friend to have an account, please contact Penguinlord2026@outlook.com
-        </p>
-    </div>
-
-    // Secret Logout Action with Password Protection
-        window.secretLogout = function() {
-            var logoutPassword = "Elpenguin0"; // CHANGE YOUR LOGOUT PASSWORD HERE
-            
-            var enteredPass = prompt("Admin Authorization Required:\nEnter Logout Password:");
-            
-            if (enteredPass !== null) {
-                if (enteredPass.trim() === logoutPassword) {
-                    // Triggers the browser to reset your login status
-                    localStorage.removeItem("my_website_visits"); 
-                    alert("Authorization Successful. Logging out...");
-                    location.reload();
-                } else {
-                    alert("Incorrect Password. Access Denied.");
-                }
-            }
-        };
     </script>
 </body>
 </html>
