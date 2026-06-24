@@ -251,15 +251,36 @@
     </div>
 
 
-    <!-- RELIABLE VISITOR COUNTER -->
-<div style="margin: 20px auto; text-align: center; font-family: sans-serif;">
-    <p style="font-size: 14px; color: #666; margin-bottom: 5px;">Total Website Views:</p>
-    <a href="https://freeavailablecounters.com">
-        <img src="https://freeavailablecounters.com/count/f1y5a.jpg?style=30" alt="Views Counter" border="0">
-    </a>
+ <!-- INTERNAL JAVASCRIPT VISITOR COUNTER -->
+<div style="margin: 30px auto; text-align: center; font-family: sans-serif; background: #ffffff; max-width: 200px; padding: 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+    <p style="font-size: 13px; color: #666; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px;">Your Visits</p>
+    <span id="visit-count" style="font-size: 24px; font-weight: bold; color: #007bff;">1</span>
 </div>
 
+<script>
+    // This script runs entirely inside your own browser window
+    function updateCounter() {
+        // 1. Check if a visit count number already exists in storage
+        let count = localStorage.getItem('my_website_visits');
+        
+        if (count) {
+            // 2. If it exists, convert it to a number and add 1
+            count = parseInt(count) + 1;
+        } else {
+            // 3. If this is the absolute first visit, start at 1
+            count = 1;
+        }
+        
+        // 4. Save the updated number back into the browser storage
+        localStorage.setItem('my_website_visits', count);
+        
+        // 5. Swap the text on the screen with the real number
+        document.getElementById('visit-count').innerText = count;
+    }
 
+    // Run the counter function immediately when the webpage opens
+    updateCounter();
+</script>
 
 
 </body>
