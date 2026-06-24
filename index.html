@@ -124,6 +124,21 @@
         .play-btn:hover {
             background-color: #0056b3; /* Darker blue when hovered */
         }
+
+                /* This styles the left side text box */
+        .left-side-box {
+            position: fixed;           /* Pins the box to the screen */
+            left: 20px;                /* Puts it 20px away from the LEFT side */
+            top: 120px;                /* Puts it 120px down from the top */
+            width: 240px;              /* Sets the width of the box */
+            background-color: #ffffff; /* White background */
+            padding: 20px;
+            border-radius: 12px;       /* Rounds the corners */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Adds a soft shadow */
+            text-align: left;          /* Aligns text inside to the left */
+            z-index: 100;              /* Makes sure it stays on top of other elements */
+        }
+
     </style>
 </head>
 <body>
@@ -281,6 +296,15 @@
     // Run the counter function immediately when the webpage opens
     updateCounter();
 </script>
+
+        <!-- LEFT SIDE TEXT BOX -->
+    <div class="left-side-box">
+        <h3 style="margin-top:0; color: #333;">Rules of use</h3>
+        <p style="font-size: 14px; color: #555; line-height: 1.4; margin-bottom: 0;">
+           Delete the link when using the site or games from this site, close the site or games after you use them (they save), and do not share the link with anyone, especially kinan.
+        </p>
+    </div>
+
 
 
 </body>
