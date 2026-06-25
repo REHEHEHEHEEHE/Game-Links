@@ -95,6 +95,22 @@ window.loginTest = async () => {
         log("Account is not banned");
     }
 };
+    const { data: userData } =
+  await supabase.auth.getUser();
+
+const user = userData.user;
+
+console.log("3d607cdc-94d5-47ec-98c4-d3c1636e97d2:", user.id);
+
+const { data: profile, error: profileError } =
+  await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+console.log("PROFILE:", profile);
+console.log("PROFILE ERROR:", profileError);
 </script>
 
 </body>
