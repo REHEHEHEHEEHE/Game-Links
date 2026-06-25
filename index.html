@@ -188,8 +188,9 @@
 
 <!-- ENGINE SCRIPT -->
 <script>
-  // DIRECT TEXT RECOVERY: Downloads your table spreadsheet structure seamlessly
-  var baseRestUrl = "https://supabase.co*";
+  // FIXED CONNECTION ROUTE: Replaced '/users' with standard folder endpoint parameters
+  var baseRestUrl = "https://supabase.co";
+  
   var masterBypassKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
     "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbmRsY2tqYnBxbGxiZnptb" +
     "3VqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjMzMzQwMi" +
@@ -234,7 +235,7 @@
         toggleBtn.innerText = user.is_banned ? "Override" : "Terminate";
         
         toggleBtn.onclick = async function() {
-          await fetch("https://supabase.co." + user.username, {
+          await fetch(baseRestUrl + "?username=eq." + user.username, {
             method: "PATCH",
             headers: restHeaders,
             body: JSON.stringify({ is_banned: !user.is_banned })
@@ -272,11 +273,10 @@
     }
 
     try {
-      // BULLETPROOF DIRECT FETCH: Grabs the full table data array straight away
-      let res = await fetch(baseRestUrl, { method: "GET", headers: restHeaders });
+      // Direct data query block
+      let res = await fetch(baseRestUrl + "?select=*", { method: "GET", headers: restHeaders });
       let allUsers = await res.json();
 
-      // Scan the downloaded file for your typed username matching data row
       var currentUser = null;
       for (var i = 0; i < allUsers.length; i++) {
           if (allUsers[i].username && allUsers[i].username.toLowerCase() === cachedUser) {
@@ -308,3 +308,5 @@
 
   runSystem();
 </script>
+</body>
+</html>
