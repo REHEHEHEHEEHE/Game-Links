@@ -58,11 +58,7 @@
 
 </div>
 
-<h1>Neo Arcade Supabase Test</h1>
 
-<button onclick="loginTest()">Login Test</button>
-
-<pre id="output"></pre>
 
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -87,10 +83,7 @@ window.loginTest = async () => {
 
     log("Attempting login...");
 
-    const { data: loginData, error: loginError } =
-        await supabase.auth.signInWithPassword({
-            email: "023896@oxley.nsw.edu.au",
-            password: "Password123!"
+
         });
 
     if (loginError) {
@@ -130,9 +123,7 @@ window.loginTest = async () => {
         return;
     }
 
-    log("PROFILE FOUND:");
-    log(JSON.stringify(profile, null, 2));
-
+    
     if (profile.role === "admin") {
         log("");
         log("Admin account detected");
