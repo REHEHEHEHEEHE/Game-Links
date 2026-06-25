@@ -109,8 +109,6 @@
     box-shadow: 0 0 10px rgba(255, 0, 85, 0.1);
   }
 </style>
-<!-- SUPABASE CDN LIBRARY LINK -->
-<script src="https://jsdelivr.net"></script>
 </head>
 <body>
 
@@ -143,31 +141,31 @@
 <div class="game-box">
   <h2 class="game-title">Cuphead</h2>
   <p class="game-description">2D Platformer shooter.</p>
-  <a href="https://github.io" class="play-btn" target="_blank">Play</a>
+  <a href="https://reheheheheehe.github.io/cuphead-rehe/" class="play-btn" target="_blank">Play</a>
 </div>
 
 <div class="game-box">
   <h2 class="game-title">Celeste</h2>
   <p class="game-description">Climb the mountain.</p>
-  <a href="https://github.io" class="play-btn" target="_blank">Play</a>
+  <a href="https://reheheheheehe.github.io/Celeste/" class="play-btn" target="_blank">Play</a>
 </div>
 
 <div class="game-box">
   <h2 class="game-title">Deltarune</h2>
   <p class="game-description">Deltarune chapters 1-4.</p>
-  <a href="https://github.io" class="play-btn" target="_blank">Play</a>
+  <a href="https://reheheheheehe.github.io/Deltarune/" class="play-btn" target="_blank">Play</a>
 </div>
 
 <div class="game-box">
   <h2 class="game-title">Minecraft</h2>
   <p class="game-description">Mine and Craft.</p>
-  <a href="https://github.io" class="play-btn" target="_blank">Play</a>
+  <a href="https://reheheheheehe.github.io/Minecraft/" class="play-btn" target="_blank">Play</a>
 </div>
 
 <div class="game-box">
   <h2 class="game-title">Doom</h2>
   <p class="game-description">Shoot demons.</p>
-  <a href="https://github.io" class="play-btn" target="_blank">Play</a>
+  <a href="https://ustymukhman.github.io/WebDOOM/public/" class="play-btn" target="_blank">Play</a>
 </div>
 
 <div class="game-box">
@@ -190,15 +188,13 @@
 
 <!-- ENGINE SCRIPT -->
 <script>
-  var supabaseUrl = "https://supabase.co";
-  var supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbmRsY2tqYnBxbGxiZnptb3VqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMzM0MDIsImV4cCI6MjA5NzkwOTQwMn0.-QJUHl7sCNUE0JFnsVHBPw9sped_oVOp8C6RTvQWYOA";
-
-  var supabaseClientInstance = null;
-  if (supabaseUrl !== "" && supabaseKey !== "") {
-    try {
-      supabaseClientInstance = supabase.createClient(supabaseUrl, supabaseKey);
-    } catch(e) { console.log("Init failed"); }
-  }
+  // SECURE PRE-CONFIGURED LINK TARGETS
+  var baseRestUrl = "https://supabase.co";
+  var restHeaders = {
+    "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbmRsY2tqYnBxbGxiZnptb3VqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMzM0MDIsImV4cCI6MjA5NzkwOTQwMn0.-QJUHl7sCNUE0JFnsVHBPw9sped_oVOp8C6RTvQWYOA",
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbmRsY2tqYnBxbGxiZnptb3VqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMzM0MDIsImV4cCI6MjA5NzkwOTQwMn0.-QJUHl7sCNUE0JFnsVHBPw9sped_oVOp8C6RTvQWYOA",
+    "Content-Type": "application/json"
+  };
   
   var logoutPassword = "Elpenguin0";
 
@@ -216,15 +212,11 @@
   async function loadAdminConsole() {
     try {
       document.getElementById("admin-console").style.display = "block";
-      let { data: users, error } = await supabaseClientInstance.from('users').select('*');
+      let res = await fetch(baseRestUrl + "?select=*", { headers: restHeaders });
+      let users = await res.json();
       var container = document.getElementById("user-management-list");
-      
-      if (error || !users || users.length === 0) {
-        container.innerHTML = "<span style='font-size:11px;color:#8a99ad;'>No user logs.</span>";
-        return;
-      }
-      
       container.innerHTML = "";
+      
       users.forEach((user) => {
         if(user.role === 'admin') return;
 
@@ -238,7 +230,11 @@
         toggleBtn.innerText = user.is_banned ? "Override" : "Terminate";
         
         toggleBtn.onclick = async function() {
-          await supabaseClientInstance.from('users').update({ is_banned: !user.is_banned }).eq('username', user.username);
+          await fetch(baseRestUrl + "?username=eq." + user.username, {
+            method: "PATCH",
+            headers: restHeaders,
+            body: JSON.stringify({ is_banned: !user.is_banned })
+          });
           alert(`Permissions updated for user: ${user.username}`);
           loadAdminConsole();
         };
@@ -247,7 +243,7 @@
         container.appendChild(row);
       });
     } catch(e) {
-      document.getElementById("user-management-list").innerHTML = "Console core error.";
+      document.getElementById("user-management-list").innerHTML = "Console log load error.";
     }
   }
 
@@ -272,10 +268,10 @@
     }
 
     try {
-      let { data: users, error } = await supabaseClientInstance.from('users').select('*').eq('username', cachedUser);
+      let res = await fetch(baseRestUrl + "?username=eq." + cachedUser + "&select=*", { headers: restHeaders });
+      let users = await res.json();
 
-      if (!error && users && users.length > 0) {
-        // FIXED: Safely targets slot 0 to read the matching user array entry
+      if (users && users.length > 0) {
         var currentUser = users[0];
 
         if (currentUser.is_banned === true) {
@@ -283,26 +279,22 @@
           document.body.innerHTML = '<div style="font-family:monospace;text-align:center;margin-top:100px;color:#ff0055;"><h1 style="text-shadow:0 0 10px #ff0055;">❌ SESSION TERMINATED</h1><p>Your hardware signature has been banned from this network grid.</p></div>';
         } else {
           localStorage.setItem("active_user", cachedUser);
-          alert("Handshake Complete. Access Granted, " + cachedUser + ".");
           document.getElementById("profile-content").innerHTML = `<b>SEC_LEVEL: ${currentUser.role.toUpperCase()}</b><br>ID: ${cachedUser}`;
           updateCounter();
 
           if (currentUser.role === "admin") { loadAdminConsole(); }
         }
       } else {
-        // FIXED: Removed loop refresh script to completely prevent infinite webpage freezes
         alert("Access Refused: Signature not recognized.");
         localStorage.removeItem("active_user");
-        document.body.innerHTML = "<h1 style='margin-top:100px;'>🔒 Access Refused: Invalid Credentials</h1><p>Please reload and try again.</p>";
+        document.body.innerHTML = "<h1 style='margin-top:100px;font-family:sans-serif;'>🔒 Access Refused: Invalid Credentials</h1>";
       }
     } catch(e) {
-      document.body.innerHTML = "<h1 style='margin-top:100px;'>🔒 Core Net Driver Error</h1>";
+      document.body.innerHTML = "<h1 style='margin-top:100px;font-family:sans-serif;'>🔒 Network Driver Failure</h1>";
     }
   }
 
-  // THIS IS THE EXACT SPOTT FOR THAT LINE:
-  if(supabaseClientInstance) { runSystem(); }
+  runSystem();
 </script>
 </body>
 </html>
-
