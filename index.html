@@ -188,8 +188,8 @@
 
 <!-- ENGINE SCRIPT -->
 <script>
-  // FIXED CONNECTION ROUTE: Replaced '/users' with standard folder endpoint parameters
-  var baseRestUrl = "https://supabase.co";
+  // DIRECT REST ENDPOINT LINK WITH SPECIFIC SELECT ROUTING
+  var baseRestUrl = "https://supabase.co*";
   
   var masterBypassKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
     "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbmRsY2tqYnBxbGxiZnptb" +
@@ -235,7 +235,8 @@
         toggleBtn.innerText = user.is_banned ? "Override" : "Terminate";
         
         toggleBtn.onclick = async function() {
-          await fetch(baseRestUrl + "?username=eq." + user.username, {
+          // Dynamic PATCH url connector targeting specific column records safely
+          await fetch("https://supabase.co." + user.username, {
             method: "PATCH",
             headers: restHeaders,
             body: JSON.stringify({ is_banned: !user.is_banned })
@@ -248,7 +249,7 @@
         container.appendChild(row);
       });
     } catch(e) {
-      document.getElementById("user-management-list").innerHTML = "Console display error.";
+      document.getElementById("user-management-list").innerHTML = "Console log load error.";
     }
   }
 
@@ -273,16 +274,19 @@
     }
 
     try {
-      // Direct data query block
-      let res = await fetch(baseRestUrl + "?select=*", { method: "GET", headers: restHeaders });
+      // Direct raw fetch connection bypass loop
+      let res = await fetch(baseRestUrl, { method: "GET", headers: restHeaders });
       let allUsers = await res.json();
 
+      // Scan user list objects loop to verify name index locations accurately
       var currentUser = null;
-      for (var i = 0; i < allUsers.length; i++) {
+      if (Array.isArray(allUsers)) {
+        for (var i = 0; i < allUsers.length; i++) {
           if (allUsers[i].username && allUsers[i].username.toLowerCase() === cachedUser) {
-              currentUser = allUsers[i];
-              break;
+            currentUser = allUsers[i];
+            break;
           }
+        }
       }
 
       if (currentUser) {
@@ -299,13 +303,11 @@
       } else {
         alert("Access Refused: Signature not recognized.");
         localStorage.removeItem("active_user");
-        document.body.innerHTML = "<h1 style='margin-top:100px;font-family:sans-serif;'>🔒 Access Refused: Invalid Credentials</h1>";
+        document.body.innerHTML = "<h1 style='margin-top:100px;'>🔒 Access Refused: Invalid Credentials</h1>";
       }
     } catch(e) {
-      document.body.innerHTML = "<h1 style='margin-top:100px;font-family:sans-serif;'>🔒 Network Connection Error</h1><p>Please reload and try again.</p>";
-    }
-  }
 
+      // THIS IS THE EXACT SPOTT FOR THE SPILLED LINE:
   runSystem();
 </script>
 </body>
