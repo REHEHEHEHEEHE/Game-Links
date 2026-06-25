@@ -2,44 +2,68 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Arcade</title>
+<title>Neo Arcade</title>
 <style>
   body {
-    background: #f0f4f8; 
-    font-family: sans-serif;
+    background: #0b0e14; 
+    color: #00f0ff;
+    font-family: 'Courier New', monospace;
     text-align: center;
     padding: 20px;
     margin: 0;
   }
-  h1 { color: #333; }
-  .game-box {
-    background: #fff; 
-    max-width: 360px; 
-    margin: 15px auto; 
-    padding: 15px;
-    border-radius: 12px; 
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+  h1 { 
+    color: #ff0055; 
+    text-shadow: 0 0 10px #ff0055;
+    font-size: 32px;
+    letter-spacing: 2px;
   }
-  .game-title { font-size: 18px; margin: 0 0 5px 0; }
-  .game-description { font-size: 13px; color: #666; margin-bottom: 12px; }
+  .game-box {
+    background: #151a24; 
+    max-width: 360px; 
+    margin: 20px auto; 
+    padding: 20px;
+    border-radius: 12px; 
+    border: 1px solid #ff0055;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.2); 
+  }
+  .game-title { 
+    font-size: 22px; 
+    color: #fff;
+    margin: 0 0 5px 0; 
+    text-shadow: 0 0 5px rgba(255,255,255,0.5);
+  }
+  .game-description { 
+    font-size: 13px; 
+    color: #8a99ad; 
+    margin-bottom: 15px; 
+  }
   .play-btn {
     display: inline-block;
-    background: #007bff; 
-    color: #fff;
-    padding: 8px 16px;
+    background: #00f0ff; 
+    color: #0b0e14;
+    padding: 10px 20px;
     text-decoration: none; 
     border-radius: 6px;
     font-weight: bold;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    transition: 0.2s;
+  }
+  .play-btn:hover {
+    background: #ff0055;
+    color: #fff;
+    box-shadow: 0 0 15px #ff0055;
   }
   .left-side-box {
     position: fixed; 
     left: 15px; 
     top: 100px; 
     width: 220px; 
-    background: #fff; 
+    background: #151a24; 
     padding: 15px;
     border-radius: 12px; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+    border: 1px solid #00f0ff;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
     text-align: left; 
     z-index: 100; 
     max-height: 400px;
@@ -50,27 +74,39 @@
     right: 15px; 
     top: 100px; 
     width: 200px; 
-    background: #fff; 
+    background: #151a24; 
     padding: 15px;
     border-radius: 12px; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+    border: 1px solid #00f0ff;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
     text-align: left; 
     z-index: 100; 
   }
   .admin-user-row {
     font-size: 12px;
     margin-bottom: 8px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #222c3d;
     padding-bottom: 5px;
+    color: #fff;
   }
   .admin-btn {
-    padding: 2px 5px;
-    font-size: 10px;
+    padding: 3px 8px;
+    font-size: 11px;
     cursor: pointer;
     border: none;
-    border-radius: 3px;
+    border-radius: 4px;
     color: #fff;
     font-weight: bold;
+    margin-top: 5px;
+  }
+  .counter-box {
+    margin: 30px auto;
+    background: #151a24;
+    max-width: 160px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ff0055;
+    box-shadow: 0 0 10px rgba(255, 0, 85, 0.1);
   }
 </style>
 <!-- SUPABASE CDN LIBRARY LINK -->
@@ -80,28 +116,28 @@
 
 <!-- LEFT BAR -->
 <div class="left-side-box">
-  <h3 style="margin:0 0 5px 0;">Profile</h3>
-  <div id="profile-content" onclick="window.secretLogout()" style="cursor:pointer;background:#fafafa;padding:5px;">
+  <h3 style="margin:0 0 5px 0; color:#ff0055;">// PROFILE</h3>
+  <div id="profile-content" onclick="window.secretLogout()" style="cursor:pointer;background:#0b0e14;padding:8px;border-radius:4px;border:1px solid #222c3d;">
        Loading...
   </div>
-  <small style="color:#999;display:block;margin-bottom:10px;">(Click text to log out)</small>
+  <small style="color:#8a99ad;display:block;margin-top:5px;">(Click profile text to log out)</small>
   
-  <div id="admin-console" style="display:none;border-top:1px dashed #ccc;padding-top:10px;">
-    <h4 style="margin:0 0 10px 0;color:#dc3545;">🔧 Remote Control</h4>
+  <div id="admin-console" style="display:none;border-top:1px dashed #222c3d;margin-top:15px;padding-top:10px;">
+    <h4 style="margin:0 0 10px 0;color:#ff0055;">// REMOTE CONSOLE</h4>
     <div id="user-management-list">Fetching...</div>
   </div>
 </div>
 
 <!-- RIGHT BAR -->
 <div class="right-side-box">
-  <h3 style="margin:0 0 5px 0;">Notes</h3>
-  <p style="font-size:13px;color:#555;margin:0;">
-    Welcome to the arcade! Custom notes go here.
+  <h3 style="margin:0 0 5px 0; color:#ff0055;">// SYSTEM NOTES</h3>
+  <p style="font-size:13px;color:#8a99ad;line-height:1.4;margin:0;">
+    SYSTEM STATUS: ONLINE.<br><br>Welcome to the neon terminal. Access verified games below.
   </p>
 </div>
 
-<h1>My Game Collection</h1>
-<p>Select a card below to play:</p>
+<h1>NEO ARCADE SYSTEMS</h1>
+<p style="color:#8a99ad;">Select an active net-grid link to deploy game client:</p>
 
 <!-- ALL 7 GAME CARDS FULLY LINKED (PRESERVED) -->
 <div class="game-box">
@@ -147,62 +183,71 @@
 </div>
 
 <!-- COUNTER -->
-<div style="margin:20px auto;background:#fff;max-width:160px;padding:10px;border-radius:8px;">
-  <p style="font-size:12px;margin:0;">Visits</p>
-  <span id="visit-count" style="font-size:20px;font-weight:bold;color:#007bff;">1</span>
+<div class="counter-box">
+  <p style="font-size:12px;margin:0;color:#8a99ad;">GRID_VISITS</p>
+  <span id="visit-count" style="font-size:22px;font-weight:bold;color:#00f0ff;text-shadow:0 0 5px #00f0ff;">1</span>
 </div>
 
 <!-- ENGINE SCRIPT -->
 <script>
-  // PASTE YOUR SUPABASE CREDENTIALS HERE
   var supabaseUrl = "https://supabase.co";
   var supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbmRsY2tqYnBxbGxiZnptb3VqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMzM0MDIsImV4cCI6MjA5NzkwOTQwMn0.-QJUHl7sCNUE0JFnsVHBPw9sped_oVOp8C6RTvQWYOA";
 
-  // Connect engine to the client library
-  var supabaseClientInstance = (supabaseUrl !== "https://supabase.co") ? supabase.createClient(supabaseUrl, supabaseKey) : null;
+  var supabaseClientInstance = null;
+  if (supabaseUrl !== "" && supabaseKey !== "") {
+    try {
+      supabaseClientInstance = supabase.createClient(supabaseUrl, supabaseKey);
+    } catch(e) { console.log("Init failed"); }
+  }
+  
   var logoutPassword = "Elpenguin0";
 
   window.secretLogout = function() {
     var p = prompt("Enter Logout Password:");
     if (p !== null && p.trim() === logoutPassword) {
       localStorage.removeItem("active_user");
-      alert("Logged out.");
+      alert("Terminal Session Closed.");
       location.reload();
     } else if (p !== null) {
-       alert("Wrong password.");
+       alert("Access Violation: Invalid Password.");
     }
   };
 
-  // Remote Console Dashboard Renderer
   async function loadAdminConsole() {
-    document.getElementById("admin-console").style.display = "block";
-    let { data: users } = await supabaseClientInstance.from('users').select('*');
-    var container = document.getElementById("user-management-list");
-    container.innerHTML = "";
-
-    if (users) {
+    try {
+      document.getElementById("admin-console").style.display = "block";
+      let { data: users, error } = await supabaseClientInstance.from('users').select('*');
+      var container = document.getElementById("user-management-list");
+      
+      if (error || !users || users.length === 0) {
+        container.innerHTML = "<span style='font-size:11px;color:#8a99ad;'>No user logs.</span>";
+        return;
+      }
+      
+      container.innerHTML = "";
       users.forEach((user) => {
         if(user.role === 'admin') return;
 
         var row = document.createElement("div");
         row.className = "admin-user-row";
-        row.innerHTML = `<b>${user.username}</b> [${user.is_banned ? "BANNED" : "OK"}]<br>`;
+        row.innerHTML = `<b>${user.username}</b> [${user.is_banned ? "LOCKED" : "ACTIVE"}]<br>`;
 
         var toggleBtn = document.createElement("button");
         toggleBtn.className = "admin-btn";
         toggleBtn.style.background = user.is_banned ? "#28a745" : "#dc3545";
-        toggleBtn.innerText = user.is_banned ? "Unban" : "Ban";
+        toggleBtn.innerText = user.is_banned ? "Override (Unban)" : "Terminate (Ban)";
         
-        // Remote console execution action
         toggleBtn.onclick = async function() {
           await supabaseClientInstance.from('users').update({ is_banned: !user.is_banned }).eq('username', user.username);
-          alert(`Updated remote permissions for ${user.username}!`);
+          alert(`Permissions updated for user: ${user.username}`);
           loadAdminConsole();
         };
 
         row.appendChild(toggleBtn);
         container.appendChild(row);
       });
+    } catch(e) {
+      document.getElementById("user-management-list").innerHTML = "Console core error.";
     }
   }
 
@@ -214,38 +259,42 @@
     if(el) { el.innerText = c; }
   }
 
-  // Core Access Routing Handshake
   async function runSystem() {
     var cachedUser = localStorage.getItem("active_user");
     
     if (!cachedUser) {
-      var enteredName = prompt("Username:");
+      var enteredName = prompt("ENTER ACCESS USERNAME:");
       if (!enteredName || enteredName.trim() === "") {
-        document.body.innerHTML = "<h1 style='margin-top:100px;'>🔒 Access Denied</h1>";
+        document.body.innerHTML = "<h1 style='margin-top:100px;'>🔒 Terminal Access Restricted</h1>";
         return;
       }
       cachedUser = enteredName.trim().toLowerCase();
     }
 
-    let { data: users } = await supabaseClientInstance.from('users').select('*').eq('username', cachedUser);
+    try {
+      let { data: users, error } = await supabaseClientInstance.from('users').select('*').eq('username', cachedUser);
 
-    if (users && users.length > 0) {
-      var currentUser = users[0];
+      if (!error && users && users.length > 0) {
+        var currentUser = users[0];
 
-      if (currentUser.is_banned === true) {
-        localStorage.removeItem("active_user");
-        document.body.innerHTML = '<div style="font-family:sans-serif;text-align:center;margin-top:100px;"><h1 style="color:red;">❌ Access Permanently Denied</h1><p>Locked by administrator.</p></div>';
+        if (currentUser.is_banned === true) {
+          localStorage.removeItem("active_user");
+          document.body.innerHTML = '<div style="font-family:monospace;text-align:center;margin-top:100px;color:#ff0055;"><h1 style="text-shadow:0 0 10px #ff0055;">❌ SESSION TERMINATED</h1><p>Your hardware signature has been banned from this network grid.</p></div>';
+        } else {
+          localStorage.setItem("active_user", cachedUser);
+          alert("Handshake Complete. Access Granted, " + cachedUser + ".");
+          document.getElementById("profile-content").innerHTML = `<b>SEC_LEVEL: ${currentUser.role.toUpperCase()}</b><br>ID: ${cachedUser}`;
+          updateCounter();
+
+          if (currentUser.role === "admin") { loadAdminConsole(); }
+        }
       } else {
-        localStorage.setItem("active_user", cachedUser);
-        alert("Welcome, " + cachedUser + "!");
-        document.getElementById("profile-content").innerHTML = `<b>${currentUser.role.toUpperCase()}</b><br>${cachedUser}`;
-        updateCounter();
-
-        if (currentUser.role === "admin") { loadAdminConsole(); }
+        alert("Access Refused: Signature not recognized.");
+        localStorage.removeItem("active_user");
+        location.reload();
       }
-    } else {
-      alert("Username not found.");
-      document.body.innerHTML = "<h1 style='margin-top:100px;'>🔒 Access Denied</h1>";
+    } catch(e) {
+      document.body.innerHTML = "<h1 style='margin-top:100px;'>🔒 Core Net Driver Error</h1>";
     }
   }
 
