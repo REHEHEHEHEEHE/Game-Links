@@ -20,15 +20,8 @@
     border-radius: 12px; 
     box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
   }
-  .game-title {
-    font-size: 18px;
-    margin: 0 0 5px 0;
-  }
-  .game-description {
-    font-size: 13px;
-    color: #666; 
-    margin-bottom: 12px;
-  }
+  .game-title { font-size: 18px; margin: 0 0 5px 0; }
+  .game-description { font-size: 13px; color: #666; margin-bottom: 12px; }
   .play-btn {
     display: inline-block;
     background: #007bff; 
@@ -42,13 +35,15 @@
     position: fixed; 
     left: 15px; 
     top: 100px; 
-    width: 200px; 
+    width: 220px; 
     background: #fff; 
     padding: 15px;
     border-radius: 12px; 
     box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
     text-align: left; 
     z-index: 100; 
+    max-height: 400px;
+    overflow-y: auto;
   }
   .right-side-box {
     position: fixed; 
@@ -62,19 +57,39 @@
     text-align: left; 
     z-index: 100; 
   }
+  .admin-user-row {
+    font-size: 12px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+  }
+  .admin-btn {
+    padding: 2px 5px;
+    font-size: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    font-weight: bold;
+  }
 </style>
+<!-- SUPABASE CDN LIBRARY LINK -->
+<script src="https://jsdelivr.net"></script>
 </head>
 <body>
 
 <!-- LEFT BAR -->
 <div class="left-side-box">
   <h3 style="margin:0 0 5px 0;">Profile</h3>
-  <div id="profile-content" 
-       onclick="window.secretLogout()" 
-       style="cursor:pointer;background:#fafafa;padding:5px;">
+  <div id="profile-content" onclick="window.secretLogout()" style="cursor:pointer;background:#fafafa;padding:5px;">
        Loading...
   </div>
-  <small style="color:#999;">(Click text to log out)</small>
+  <small style="color:#999;display:block;margin-bottom:10px;">(Click text to log out)</small>
+  
+  <div id="admin-console" style="display:none;border-top:1px dashed #ccc;padding-top:10px;">
+    <h4 style="margin:0 0 10px 0;color:#dc3545;">🔧 Remote Control</h4>
+    <div id="user-management-list">Fetching...</div>
+  </div>
 </div>
 
 <!-- RIGHT BAR -->
@@ -137,60 +152,59 @@
   <span id="visit-count" style="font-size:20px;font-weight:bold;color:#007bff;">1</span>
 </div>
 
-<!-- SYSTEM ENGINE -->
+<!-- ENGINE SCRIPT -->
 <script>
-  // CORE CONFIGURATION
-  var allowedNames = [
-    "angus", "george", "xavier", 
-    "oliver", "charlie", "james", 
-    "abel", "kosmikninetyseven", "cameron", "heston",
-    "jack",
-  ]; 
-  var adminName = "administrator"; 
-  var unbanPassword = "Elpenguin0"; 
+  // PASTE YOUR SUPABASE CREDENTIALS HERE
+  var supabaseUrl = "https://supabase.co";
+  var supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbmRsY2tqYnBxbGxiZnptb3VqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMzM0MDIsImV4cCI6MjA5NzkwOTQwMn0.-QJUHl7sCNUE0JFnsVHBPw9sped_oVOp8C6RTvQWYOA";
 
-  // Paste your Web3Forms token inside the quotes below!
-  var web3AccessKey = "202ef695-87e7-4b68-9317-1cb06d3e8729";
-
-  function sendBanAlertEmail(badName) {
-    var timeStamp = new Date().toLocaleTimeString();
-    
-    // ASYNCHRONOUS FETCH: Sends the alert instantly in the background without lag
-    fetch("https://web3forms.com", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify({
-        access_key: web3AccessKey,
-        subject: "🚨 SECURITY ALERT: USER BANNED!",
-        attempted_name: badName,
-        time_of_ban: timeStamp
-      })
-    });
-  }
-
-  window.tryUnban = function() {
-    var p = prompt("Enter Password:");
-    if (p !== null && p.trim() === unbanPassword) {
-      localStorage.removeItem("banned_user");
-      alert("Unlocked!");
-      location.reload();
-    } else if (p !== null) {
-      alert("Wrong password.");
-    }
-  };
+  // Connect engine to the client library
+  var supabaseClientInstance = (supabaseUrl !== "https://supabase.co") ? supabase.createClient(supabaseUrl, supabaseKey) : null;
+  var logoutPassword = "Elpenguin0";
 
   window.secretLogout = function() {
     var p = prompt("Enter Logout Password:");
-    if (p !== null) {
-      if (p.trim() === unbanPassword) {
-        localStorage.removeItem("my_website_visits"); 
-        alert("Logged out.");
-        location.reload();
-      } else {
-        alert("Wrong password.");
-      }
+    if (p !== null && p.trim() === logoutPassword) {
+      localStorage.removeItem("active_user");
+      alert("Logged out.");
+      location.reload();
+    } else if (p !== null) {
+       alert("Wrong password.");
     }
   };
+
+  // Remote Console Dashboard Renderer
+  async function loadAdminConsole() {
+    document.getElementById("admin-console").style.display = "block";
+    let { data: users } = await supabaseClientInstance.from('users').select('*');
+    var container = document.getElementById("user-management-list");
+    container.innerHTML = "";
+
+    if (users) {
+      users.forEach((user) => {
+        if(user.role === 'admin') return;
+
+        var row = document.createElement("div");
+        row.className = "admin-user-row";
+        row.innerHTML = `<b>${user.username}</b> [${user.is_banned ? "BANNED" : "OK"}]<br>`;
+
+        var toggleBtn = document.createElement("button");
+        toggleBtn.className = "admin-btn";
+        toggleBtn.style.background = user.is_banned ? "#28a745" : "#dc3545";
+        toggleBtn.innerText = user.is_banned ? "Unban" : "Ban";
+        
+        // Remote console execution action
+        toggleBtn.onclick = async function() {
+          await supabaseClientInstance.from('users').update({ is_banned: !user.is_banned }).eq('username', user.username);
+          alert(`Updated remote permissions for ${user.username}!`);
+          loadAdminConsole();
+        };
+
+        row.appendChild(toggleBtn);
+        container.appendChild(row);
+      });
+    }
+  }
 
   function updateCounter() {
     let c = localStorage.getItem('my_website_visits');
@@ -200,33 +214,42 @@
     if(el) { el.innerText = c; }
   }
 
-  if (localStorage.getItem("banned_user") === "true") {
-    var bh = '<div style="font-family:sans-serif;text-align:center;margin-top:100px;">' +
-             '<h1 style="color:red;cursor:pointer;" onclick="window.tryUnban()">❌ Banned</h1>' +
-             '<small>(Click to unban)</small></div>';
-    document.body.innerHTML = bh;
-  } else {
-    var name = prompt("Username:");
-    if (name === null || name.trim() === "") {
-      document.body.innerHTML = "<h1 style='margin-top:100px;'>🔒 Access Denied</h1>";
-    } else {
-      var cn = name.trim().toLowerCase();
-      if (cn === adminName) {
-        alert("Welcome Admin.");
-        document.getElementById("profile-content").innerHTML = "<b>Admin</b><br>" + name;
-        updateCounter();
-      } else if (allowedNames.includes(cn)) {
-        alert("Welcome Player.");
-        document.getElementById("profile-content").innerHTML = "<b>Player</b><br>" + name;
-        updateCounter();
-      } else {
-        sendBanAlertEmail(name);
-        localStorage.setItem("banned_user", "true");
-        alert("Banned!");
-        location.reload();
+  // Core Access Routing Handshake
+  async function runSystem() {
+    var cachedUser = localStorage.getItem("active_user");
+    
+    if (!cachedUser) {
+      var enteredName = prompt("Username:");
+      if (!enteredName || enteredName.trim() === "") {
+        document.body.innerHTML = "<h1 style='margin-top:100px;'>🔒 Access Denied</h1>";
+        return;
       }
+      cachedUser = enteredName.trim().toLowerCase();
+    }
+
+    let { data: users } = await supabaseClientInstance.from('users').select('*').eq('username', cachedUser);
+
+    if (users && users.length > 0) {
+      var currentUser = users[0];
+
+      if (currentUser.is_banned === true) {
+        localStorage.removeItem("active_user");
+        document.body.innerHTML = '<div style="font-family:sans-serif;text-align:center;margin-top:100px;"><h1 style="color:red;">❌ Access Permanently Denied</h1><p>Locked by administrator.</p></div>';
+      } else {
+        localStorage.setItem("active_user", cachedUser);
+        alert("Welcome, " + cachedUser + "!");
+        document.getElementById("profile-content").innerHTML = `<b>${currentUser.role.toUpperCase()}</b><br>${cachedUser}`;
+        updateCounter();
+
+        if (currentUser.role === "admin") { loadAdminConsole(); }
+      }
+    } else {
+      alert("Username not found.");
+      document.body.innerHTML = "<h1 style='margin-top:100px;'>🔒 Access Denied</h1>";
     }
   }
+
+  if(supabaseClientInstance) { runSystem(); }
 </script>
 </body>
 </html>
