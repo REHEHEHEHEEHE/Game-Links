@@ -154,39 +154,35 @@
   var unbanPassword = "Elpenguin0"; 
 
   // PASTE CLOUD KEYS HERE
-  var jsonBinId = "6a3c73f9da38895dfefa6193"; 
-  var jsonBinKey = "$2a$10$3uE/decpe1BRW7v9GN055Oj7VAmP1miZhZRpKcrVipoX9KZoLsyhy";
+  var jsonBinId = "YOUR_BIN_ID"; 
+  var jsonBinKey = "YOUR_API_KEY";
 
   window.showUniversalLog = function() {
-    var base = 'https://jsonbin.io';
+    var base = 'https://api.jsonbin.io/v3/b/';
     fetch(base + jsonBinId + '/latest', {
       method: 'GET',
       headers: { "X-Master-Key": jsonBinKey, "X-Bin-Meta": "false" }
     })
-    .then(res => {
-      if(!res.ok) throw new Error();
-      return res.json();
-    })
+    .then(res => res.json())
     .then(data => {
-      var list = data.blockedAttempts || data.record?.blockedAttempts || data;
-      if (Array.isArray(list)) {
-        alert(list.length > 0 ? "🌍 LOGS:\n" + list.join("\n") : "Empty!");
-      } else {
-        alert("Connected, but layout empty!");
-      }
+      // Look inside 'record' object which jsonbin v3 generates
+      var recordData = data.record || data;
+      var list = recordData.blockedAttempts || [];
+      alert(list.length > 0 ? "🌍 CLOUD LOGS:\n" + list.join("\n") : "Log empty!");
     })
-    .catch(() => alert("Cloud connection failed."));
+    .catch(() => alert("Cloud connection failed. Showing empty dashboard profile."));
   };
 
   function logAttemptToCloud(badName) {
-    var base = 'https://jsonbin.io' + jsonBinId;
+    var base = 'https://api.jsonbin.io/v3/b/' + jsonBinId;
     fetch(base + '/latest', {
       method: 'GET',
       headers: { "X-Master-Key": jsonBinKey, "X-Bin-Meta": "false" }
     })
     .then(res => res.json())
     .then(data => {
-      var arr = data.blockedAttempts || data.record?.blockedAttempts || [];
+      var recordData = data.record || data;
+      var arr = recordData.blockedAttempts || [];
       var time = new Date().toLocaleTimeString();
       arr.push("- [" + time + "] Name: '" + badName + "'");
       fetch(base, {
@@ -196,6 +192,7 @@
       });
     })
     .catch(() => {
+      // Fallback: structural creation fallback to override jsonbin profile mismatch
       var arr = [];
       var time = new Date().toLocaleTimeString();
       arr.push("- [" + time + "] Name: '" + badName + "'");
