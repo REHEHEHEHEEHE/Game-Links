@@ -88,7 +88,7 @@
 <h1>My Game Collection</h1>
 <p>Select a card below to play:</p>
 
-<!-- ALL 7 GAME CARDS FULLY LINKED -->
+<!-- ALL 7 GAME CARDS FULLY LINKED (PRESERVED) -->
 <div class="game-box">
   <h2 class="game-title">Cuphead</h2>
   <p class="game-description">2D Platformer shooter.</p>
@@ -137,14 +137,6 @@
   <span id="visit-count" style="font-size:20px;font-weight:bold;color:#007bff;">1</span>
 </div>
 
-<!-- HIDDEN AUTOMATIC BACKGROUND DISPATCHER -->
-<form id="emailForm" action="https://web3forms.com" method="POST" style="display:none;">
-  <input type="hidden" name="access_key" id="formApiKey" value="">
-  <input type="text" name="Arcade_Alert" value="🚨 SECURITY NOTICE: USER BANNED!">
-  <input type="text" name="Attempted_Name" id="formBadName">
-  <input type="text" name="Time" id="formTime">
-</form>
-
 <!-- SYSTEM ENGINE -->
 <script>
   // CORE CONFIGURATION
@@ -156,19 +148,23 @@
   var adminName = "administrator"; 
   var unbanPassword = "Elpenguin0"; 
 
-  // LOOK HERE: Paste your Web3Forms token inside the quotes below!
+  // Paste your Web3Forms token inside the quotes below!
   var web3AccessKey = "202ef695-87e7-4b68-9317-1cb06d3e8729";
 
   function sendBanAlertEmail(badName) {
     var timeStamp = new Date().toLocaleTimeString();
     
-    // Links your setup key directly to the background router form
-    document.getElementById("formApiKey").value = web3AccessKey;
-    document.getElementById("formBadName").value = badName;
-    document.getElementById("formTime").value = timeStamp;
-    
-    // Submits the background script form instantly
-    document.getElementById("emailForm").submit();
+    // ASYNCHRONOUS FETCH: Sends the alert instantly in the background without lag
+    fetch("https://web3forms.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({
+        access_key: web3AccessKey,
+        subject: "🚨 SECURITY ALERT: USER BANNED!",
+        attempted_name: badName,
+        time_of_ban: timeStamp
+      })
+    });
   }
 
   window.tryUnban = function() {
