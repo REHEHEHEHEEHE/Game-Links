@@ -90,7 +90,7 @@
     <h1>My Game Collection</h1>
     <p>Click a card below to play my creations!</p>
 
-    <!-- YOUR GAME CARDS -->
+    <!-- YOUR 7 GAME CARDS -->
     <div class="game-box"><h2 class="game-title">Cuphead</h2><p class="game-description">2D Platformer shooter.</p><a href="https://reheheheheehe.github.io/cuphead-rehe/" class="play-btn" target="_blank">Play</a></div>
     <div class="game-box"><h2 class="game-title">Celeste</h2><p class="game-description">Climb the mountain.</p><a href="https://reheheheheehe.github.io/Celeste/" class="play-btn" target="_blank">Play</a></div>
     <div class="game-box"><h2 class="game-title">Deltarune</h2><p class="game-description">Deltarune chapters 1-4.</p><a href="https://reheheheheehe.github.io/Deltarune/" class="play-btn" target="_blank">Play</a></div>
@@ -112,31 +112,40 @@
         var adminName = "administrator";          
         var unbanPassword = "Elpenguin0";   
 
-        // PASTE YOUR CLOUD DATABASE CREDENTIALS HERE
+        // REMEMBER TO RE-PASTE YOUR CLOUD DATABASE CREDENTIALS HERE
         var jsonBinId = "6a3c73f9da38895dfefa6193"; 
         var jsonBinKey = "$2a$10$3uE/decpe1BRW7v9GN055Oj7VAmP1miZhZRpKcrVipoX9KZoLsyhy";
 
-        // Fetches logs from the cloud database to show the admin
         window.showUniversalLog = function() {
             fetch(`https://jsonbin.io{jsonBinId}/latest`, {
-                headers: { "X-Master-Key": jsonBinKey }
+                method: 'GET',
+                headers: { 
+                    "X-Master-Key": jsonBinKey,
+                    "X-Bin-Meta": "false" 
+                }
             })
-            .then(res => res.json())
+            .then(res => {
+                if(!res.ok) throw new Error();
+                return res.json();
+            })
             .then(data => {
-                var list = data.record.blockedAttempts;
+                var list = data.blockedAttempts || [];
                 alert(list.length > 0 ? "🌍 CLOUD FAIL LOGS:\n" + list.join("\n") : "No cloud logs yet!");
             })
-            .catch(() => alert("Database connection failed."));
+            .catch(() => alert("Database connection failed. Check your Master Key or Bin ID."));
         };
 
-        // Sends a bad login name up to the cloud database
         function logAttemptToCloud(badName) {
             fetch(`https://jsonbin.io{jsonBinId}/latest`, {
-                headers: { "X-Master-Key": jsonBinKey }
+                method: 'GET',
+                headers: { 
+                    "X-Master-Key": jsonBinKey,
+                    "X-Bin-Meta": "false"
+                }
             })
             .then(res => res.json())
             .then(data => {
-                var currentList = data.record.blockedAttempts;
+                var currentList = data.blockedAttempts || [];
                 var timestamp = new Date().toLocaleTimeString();
                 currentList.push(`- [${timestamp}] Tried name: '${badName}'`);
 
@@ -144,7 +153,8 @@
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Master-Key': jsonBinKey
+                        'X-Master-Key': jsonBinKey,
+                        'X-Bin-Meta': 'false'
                     },
                     body: JSON.stringify({ blockedAttempts: currentList })
                 });
@@ -196,17 +206,16 @@
                     document.getElementById("profile-content").innerHTML = "<strong>Role:</strong> Admin<br><strong>User:</strong> " + visitorName;
                     document.getElementById("admin-area").style.display = "block";
                     updateCounter();
-                } else if (allowedNames.includes(cleanedName)) {
+
+                                    } else if (allowedNames.includes(cleanedName)) {
                     alert("Welcome Player.");
                     document.getElementById("profile-content").innerHTML = "<strong>Role:</strong> Player<br><strong>User:</strong> " + visitorName;
                     updateCounter();
                 } else {
-                                   
-                    // Log failed entry into the global cloud bin
                     logAttemptToCloud(visitorName);
                     localStorage.setItem("banned_user", "true");
                     alert("Banned!");
-                    location.reload(); 
+                    location.reload();
                 }
             }
         }
