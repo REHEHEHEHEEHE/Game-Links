@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -112,7 +113,6 @@
 </head>
 <body>
 
-<!-- LEFT BAR -->
 <div class="left-side-box">
   <h3 style="margin:0 0 5px 0; color:#ff0055;">// PROFILE</h3>
   <div id="profile-content" onclick="window.secretLogout()" style="cursor:pointer;background:#0b0e14;padding:8px;border-radius:4px;border:1px solid #222c3d;">
@@ -126,7 +126,6 @@
   </div>
 </div>
 
-<!-- RIGHT BAR -->
 <div class="right-side-box">
   <h3 style="margin:0 0 5px 0; color:#ff0055;">// SYSTEM NOTES</h3>
   <p style="font-size:13px;color:#8a99ad;line-height:1.4;margin:0;">
@@ -137,7 +136,6 @@
 <h1>NEO ARCADE SYSTEMS</h1>
 <p style="color:#8a99ad;">Select an active net-grid link to deploy game client:</p>
 
-<!-- ALL 7 GAME CARDS FULLY LINKED (PRESERVED) -->
 <div class="game-box">
   <h2 class="game-title">Cuphead</h2>
   <p class="game-description">2D Platformer shooter.</p>
@@ -180,39 +178,27 @@
   <a href="#" class="play-btn" target="_blank">Play</a>
 </div>
 
-<!-- COUNTER -->
 <div class="counter-box">
   <p style="font-size:12px;margin:0;color:#8a99ad;">GRID_VISITS</p>
   <span id="visit-count" style="font-size:22px;font-weight:bold;color:#00f0ff;text-shadow:0 0 5px #00f0ff;">1</span>
 </div>
 
-<!-- ENGINE SCRIPT -->
 <script>
-  // Your clean, corrected project REST API endpoint
+  // 1. Core Endpoints & Keys Setup
   var baseRestUrl = "https://xendlckjbpqllbfzmouj.supabase.co/rest/v1"; 
-  
-  // Your valid, authenticated project public anon token
+  var baseAuthUrl = "https://xendlckjbpqllbfzmouj.supabase.co/auth/v1";
   var publicAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbmRsY2tqYnBxbGxiZnptb3VqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMzM0MDIsImV4cCI6MjA5NzkwOTQwMn0.-QJUHl7sCNUE0JFnsVHBPw9sped_oVOp8C6RTvQWYOA";
-</script>
-<script>
-  // Your clean, corrected database endpoint
-var baseRestUrl = "https://xendlckjbpqllbfzmouj.supabase.co/rest/v1"; 
 
-// Explicit native authentication gateway endpoint
-var baseAuthUrl = "https://xendlckjbpqllbfzmouj.supabase.co/auth/v1";
-
-// Your valid, authenticated project public anon token
-var publicAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbmRsY2tqYnBxbGxiZnptb3VqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMzM0MDIsImV4cCI6MjA5NzkwOTQwMn0.-QJUHl7sCNUE0JFnsVHBPw9sped_oVOp8C6RTvQWYOA";
-
+  // FIXED: Replaced non-existent 'masterBypassKey' with the declared publicAnonKey
   var restHeaders = {
-    "apikey": masterBypassKey,
-    "Authorization": "Bearer " + masterBypassKey,
+    "apikey": publicAnonKey,
+    "Authorization": "Bearer " + publicAnonKey,
     "Content-Type": "application/json"
   };
-</script>
-  <script>
+
   var logoutPassword = "Elpenguin0";
 
+  // 2. Secret Terminal Logout Routine
   window.secretLogout = function() {
     var p = prompt("Enter Logout Password:");
     if (p !== null && p.trim() === logoutPassword) {
@@ -223,8 +209,8 @@ var publicAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
        alert("Access Violation: Invalid Password.");
     }
   };
-  </script>
-  <script>
+
+  // 3. Admin Panel Management Engine
   async function loadAdminConsole(allUsers) {
     try {
       document.getElementById("admin-console").style.display = "block";
@@ -244,7 +230,8 @@ var publicAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
         toggleBtn.innerText = user.is_banned ? "Override" : "Terminate";
         
         toggleBtn.onclick = async function() {
-          await fetch("https://supabase.co." + user.username, {
+          // FIXED: Pointed to target Supabase REST query pattern instead of the broken domain address
+          await fetch(`${baseRestUrl}/users?username=eq.${user.username}`, {
             method: "PATCH",
             headers: restHeaders,
             body: JSON.stringify({ is_banned: !user.is_banned })
@@ -260,8 +247,8 @@ var publicAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
       document.getElementById("user-management-list").innerHTML = "Console log load error.";
     }
   }
-  </script>
-  <script>
+
+  // 4. Analytics Counter Routine
   function updateCounter() {
     let c = localStorage.getItem('my_website_visits');
     c = c ? parseInt(c) + 1 : 1;
@@ -270,6 +257,7 @@ var publicAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
     if(el) { el.innerText = c; }
   }
 
+  // 5. System Initializer Execution Environment
   async function runSystem() {
     var cachedUser = localStorage.getItem("active_user");
     
@@ -283,7 +271,8 @@ var publicAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
     }
 
     try {
-      let res = await fetch(baseRestUrl, { method: "GET", headers: restHeaders });
+      // FIXED: Routed specific data acquisition to the target 'users' table path
+      let res = await fetch(`${baseRestUrl}/users`, { method: "GET", headers: restHeaders });
       let allUsers = await res.json();
 
       var currentUser = null;
@@ -297,14 +286,12 @@ var publicAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
       }
 
       if (currentUser) {
-        // FIXED: Correctly matching the table variable case layout rules
         if (currentUser.is_banned === true) {
           localStorage.removeItem("active_user");
           document.body.innerHTML = '<div style="font-family:monospace;text-align:center;margin-top:100px;color:#ff0055;"><h1 style="text-shadow:0 0 10px #ff0055;">❌ SESSION TERMINATED</h1><p>Your hardware signature has been banned from this network grid.</p></div>';
         } else {
           localStorage.setItem("active_user", cachedUser);
           
-          // FIXED: Correct uppercase string processing method fixes text layout blockages
           var displayRole = currentUser.role ? currentUser.role.toUpperCase() : "PLAYER";
           document.getElementById("profile-content").innerHTML = `<b>SEC_LEVEL: ${displayRole}</b><br>ID: ${cachedUser}`;
           updateCounter();
@@ -317,9 +304,14 @@ var publicAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
         document.body.innerHTML = "<h1 style='margin-top:100px;'>🔒 Access Refused: Invalid Credentials</h1>";
       }
     } catch(e) {
+      console.error(e); // Outputs error details directly to Developer Tools Console for diagnostic evaluation
+      document.body.innerHTML = "🔒 Network Driver Failure. Connection block detected.";
+    }
+  }
 
-      document.body.innerHTML = "🔒 Network Driver FailureConnection block detected.";}}runSystem();
-  </script>
+  runSystem();
+</script>
 </body>
 </html>
 
+```
