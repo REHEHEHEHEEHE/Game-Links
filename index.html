@@ -63,6 +63,9 @@
     z-index: 100; 
   }
 </style>
+
+<!-- SECURE LOADER SCRIPT FOR THE EMAIL SERVICE -->
+<script src="https://jsdelivr.net"></script>
 </head>
 <body>
 
@@ -75,12 +78,6 @@
        Loading...
   </div>
   <small style="color:#999;">(Click text to log out)</small>
-  <div id="admin-area" style="display:none;margin-top:10px;">
-    <button onclick="window.showUniversalLog()" 
-            style="background:#dc3545;color:#fff;border:none;padding:5px;width:100%;cursor:pointer;">
-            View Cloud Log
-    </button>
-  </div>
 </div>
 
 <!-- RIGHT BAR -->
@@ -153,24 +150,24 @@
   var adminName = "administrator"; 
   var unbanPassword = "Elpenguin0"; 
 
-  // AUTOMATIC UNIQUE CHANNEL KEY BASED ON YOUR ARCADE NAME
-  var cloudKey = "reheheheheehe_arcade_fail_counter";
+  // PASTE YOUR EMAIL RELAY CONFIGURATION CODES HERE
+  var emailServiceId = "service_nep5tle";
+  var emailTemplateId = "template_rma2dg4";
+  var emailPublicKey = "YAJnmzosp9Q0CCdnU";
 
-  window.showUniversalLog = function() {
-    // This fetches the global counter value directly from the API without passwords
-    fetch('https://countapi.xyz' + cloudKey)
-    .then(res => res.json())
-    .then(data => {
-      var count = data.value || 0;
-      alert("🌍 UNIVERSAL SECURITY ALERTS:\nTotal blocked/failed name entry attempts on this website: " + count);
-    })
-    .catch(() => alert("Could not fetch global log database."));
-  };
+  // Connects and unlocks the dispatch engine
+  if(emailPublicKey !== "YAJnmzosp9Q0CCdnU") {
+      emailjs.init({ publicKey: emailPublicKey });
+  }
 
-  function logAttemptToCloud() {
-    // This increments the universal tally mark in the cloud instantly
-    fetch('https://countapi.xyz' + cloudKey)
-    .catch(() => console.log("Cloud logging skipped."));
+  function sendBanAlertEmail(badName) {
+    var timeStamp = new Date().toLocaleTimeString();
+    
+    // Transmits tracking properties directly up to your template tags
+    emailjs.send(emailServiceId, emailTemplateId, {
+        bad_name: badName,
+        time: timeStamp
+    });
   }
 
   window.tryUnban = function() {
@@ -219,14 +216,14 @@
       if (cn === adminName) {
         alert("Welcome Admin.");
         document.getElementById("profile-content").innerHTML = "<b>Admin</b><br>" + name;
-        document.getElementById("admin-area").style.display = "block";
         updateCounter();
       } else if (allowedNames.includes(cn)) {
         alert("Welcome Player.");
         document.getElementById("profile-content").innerHTML = "<b>Player</b><br>" + name;
         updateCounter();
       } else {
-        logAttemptToCloud(); // Instantly increments the global cloud dashboard
+        // Dispatches the alert tracking data directly to your inbox
+        sendBanAlertEmail(name);
         localStorage.setItem("banned_user", "true");
         alert("Banned!");
         location.reload();
