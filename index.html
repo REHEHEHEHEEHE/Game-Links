@@ -153,55 +153,24 @@
   var adminName = "administrator"; 
   var unbanPassword = "Elpenguin0"; 
 
-  // PASTE CLOUD KEYS HERE
-  var jsonBinId = "YOUR_BIN_ID"; 
-  var jsonBinKey = "YOUR_API_KEY";
+  // AUTOMATIC UNIQUE CHANNEL KEY BASED ON YOUR ARCADE NAME
+  var cloudKey = "reheheheheehe_arcade_fail_counter";
 
   window.showUniversalLog = function() {
-    var base = 'https://api.jsonbin.io/v3/b/';
-    fetch(base + jsonBinId + '/latest', {
-      method: 'GET',
-      headers: { "X-Master-Key": jsonBinKey, "X-Bin-Meta": "false" }
-    })
+    // This fetches the global counter value directly from the API without passwords
+    fetch('https://countapi.xyz' + cloudKey)
     .then(res => res.json())
     .then(data => {
-      // Look inside 'record' object which jsonbin v3 generates
-      var recordData = data.record || data;
-      var list = recordData.blockedAttempts || [];
-      alert(list.length > 0 ? "🌍 CLOUD LOGS:\n" + list.join("\n") : "Log empty!");
+      var count = data.value || 0;
+      alert("🌍 UNIVERSAL SECURITY ALERTS:\nTotal blocked/failed name entry attempts on this website: " + count);
     })
-    .catch(() => alert("Cloud connection failed. Showing empty dashboard profile."));
+    .catch(() => alert("Could not fetch global log database."));
   };
 
-  function logAttemptToCloud(badName) {
-    var base = 'https://api.jsonbin.io/v3/b/' + jsonBinId;
-    fetch(base + '/latest', {
-      method: 'GET',
-      headers: { "X-Master-Key": jsonBinKey, "X-Bin-Meta": "false" }
-    })
-    .then(res => res.json())
-    .then(data => {
-      var recordData = data.record || data;
-      var arr = recordData.blockedAttempts || [];
-      var time = new Date().toLocaleTimeString();
-      arr.push("- [" + time + "] Name: '" + badName + "'");
-      fetch(base, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-Master-Key': jsonBinKey, 'X-Bin-Meta': 'false' },
-        body: JSON.stringify({ blockedAttempts: arr })
-      });
-    })
-    .catch(() => {
-      // Fallback: structural creation fallback to override jsonbin profile mismatch
-      var arr = [];
-      var time = new Date().toLocaleTimeString();
-      arr.push("- [" + time + "] Name: '" + badName + "'");
-      fetch(base, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-Master-Key': jsonBinKey, 'X-Bin-Meta': 'false' },
-        body: JSON.stringify({ blockedAttempts: arr })
-      });
-    });
+  function logAttemptToCloud() {
+    // This increments the universal tally mark in the cloud instantly
+    fetch('https://countapi.xyz' + cloudKey)
+    .catch(() => console.log("Cloud logging skipped."));
   }
 
   window.tryUnban = function() {
@@ -257,7 +226,7 @@
         document.getElementById("profile-content").innerHTML = "<b>Player</b><br>" + name;
         updateCounter();
       } else {
-        logAttemptToCloud(name);
+        logAttemptToCloud(); // Instantly increments the global cloud dashboard
         localStorage.setItem("banned_user", "true");
         alert("Banned!");
         location.reload();
