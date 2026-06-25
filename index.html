@@ -92,6 +92,31 @@ button{
 <div id="adminBadge" style="display:none;">
     <h3>Administrator</h3>
 </div>
+    <div id="adminPanel" style="display:none; margin-top:20px;">
+
+    <h2>Admin Panel</h2>
+
+    <table
+        id="userTable"
+        style="
+            width:100%;
+            border-collapse:collapse;
+        ">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Banned</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody id="userTableBody">
+        </tbody>
+
+    </table>
+
+</div>
 
 <div class="game-grid">
 
@@ -232,6 +257,127 @@ window.logout = async () => {
 
     location.reload();
 };
+    async function loadAdminPanel(){
+
+    const { data, error } =
+        await supabase.rpc(
+            "get_all_profiles"
+        );
+
+    if(error){
+        console.error(error);
+        return;
+    }
+
+    const tableBody =
+        document.getElementById(
+            "userTableBody"
+        );
+
+    tableBody.innerHTML = "";
+
+    data.forEach(user => {
+
+        const row =
+            document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${user.username}</td>
+            <td>${user.role}</td>
+            <td>${user.is_banned ? "Yes" : "No"}</td>
+
+            <td>
+
+                <button
+                    onclick="changeRole(
+                        '${user.id}',
+                        '${
+                            user.role === 'admin'
+                            ? 'player'
+                            : 'admin'
+                        }',
+                        ${user.is_banned}
+                    )">
+
+                    ${
+                        user.role === 'admin'
+                        ? 'Demote'
+                        : 'Promote'
+                    }
+
+                </button>
+
+                <button
+                    onclick="toggleBan(
+                        '${user.id}',
+                        '${user.role}',
+                        ${!user.is_banned}
+                    )">
+
+                    ${
+                        user.is_banned
+                        ? 'Unban'
+                        : 'Ban'
+                    }
+
+                </button>
+
+            </td>
+        `;
+
+        tableBody.appendChild(row);
+
+    });
+
+}
+    window.changeRole = async (
+    userId,
+    newRole,
+    currentBanStatus
+) => {
+
+    const { error } =
+        await supabase.rpc(
+            "admin_update_user",
+            {
+                target_user_id: userId,
+                new_role: newRole,
+                new_ban_status:
+                    currentBanStatus
+            }
+        );
+
+    if(error){
+        alert(error.message);
+        return;
+    }
+
+    await loadAdminPanel();
+};
+    window.toggleBan = async (
+    userId,
+    currentRole,
+    newBanStatus
+) => {
+
+    const { error } =
+        await supabase.rpc(
+            "admin_update_user",
+            {
+                target_user_id: userId,
+                new_role: currentRole,
+                new_ban_status:
+                    newBanStatus
+            }
+        );
+
+    if(error){
+        alert(error.message);
+        return;
+    }
+
+    await loadAdminPanel();
+};
 
 async function loadUser(){
 
@@ -272,8 +418,17 @@ async function loadUser(){
     document.getElementById("userPanel").style.display = "block";
 
     if(profile.role === "admin"){
-        document.getElementById("adminBadge").style.display = "block";
-    }
+
+    document.getElementById(
+        "adminBadge"
+    ).style.display = "block";
+
+    document.getElementById(
+        "adminPanel"
+    ).style.display = "block";
+
+    await loadAdminPanel();
+}
 }
 
 const {
