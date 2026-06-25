@@ -191,26 +191,35 @@ window.login = async () => {
     const password =
         document.getElementById("loginPassword").value;
 
-    const { data: profile, error: profileError } =
-        await supabase
-            .from("profiles")
-            .select("*")
-            .eq("username", username)
-            .single();
+    const { data, error } =
+        await supabase.rpc(
+            "get_email_from_username",
+            {
+                input_username: username
+            }
+        );
 
-    if(profileError || !profile){
+    if(error){
+        console.error(error);
+        alert("Username lookup failed.");
+        return;
+    }
+
+    if(!data || data.length === 0){
         alert("Username not found.");
         return;
     }
 
-    const { error } =
+    const email = data[0].email;
+
+    const { error: loginError } =
         await supabase.auth.signInWithPassword({
-            email: profile.email,
+            email,
             password
         });
 
-    if(error){
-        alert(error.message);
+    if(loginError){
+        alert(loginError.message);
         return;
     }
 
