@@ -188,7 +188,6 @@
 
 <!-- ENGINE SCRIPT -->
 <script>
-  // DIRECT REST ENDPOINT LINK WITH SPECIFIC SELECT ROUTING
   var baseRestUrl = "https://supabase.co*";
   
   var masterBypassKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
@@ -235,7 +234,6 @@
         toggleBtn.innerText = user.is_banned ? "Override" : "Terminate";
         
         toggleBtn.onclick = async function() {
-          // Dynamic PATCH url connector targeting specific column records safely
           await fetch("https://supabase.co." + user.username, {
             method: "PATCH",
             headers: restHeaders,
@@ -274,11 +272,9 @@
     }
 
     try {
-      // Direct raw fetch connection bypass loop
       let res = await fetch(baseRestUrl, { method: "GET", headers: restHeaders });
       let allUsers = await res.json();
 
-      // Scan user list objects loop to verify name index locations accurately
       var currentUser = null;
       if (Array.isArray(allUsers)) {
         for (var i = 0; i < allUsers.length; i++) {
@@ -290,12 +286,16 @@
       }
 
       if (currentUser) {
+        // FIXED: Correctly matching the table variable case layout rules
         if (currentUser.is_banned === true) {
           localStorage.removeItem("active_user");
           document.body.innerHTML = '<div style="font-family:monospace;text-align:center;margin-top:100px;color:#ff0055;"><h1 style="text-shadow:0 0 10px #ff0055;">❌ SESSION TERMINATED</h1><p>Your hardware signature has been banned from this network grid.</p></div>';
         } else {
           localStorage.setItem("active_user", cachedUser);
-          document.getElementById("profile-content").innerHTML = `<b>SEC_LEVEL: ${currentUser.role.toUpperCase()}</b><br>ID: ${cachedUser}`;
+          
+          // FIXED: Correct uppercase string processing method fixes text layout blockages
+          var displayRole = currentUser.role ? currentUser.role.toUpperCase() : "PLAYER";
+          document.getElementById("profile-content").innerHTML = `<b>SEC_LEVEL: ${displayRole}</b><br>ID: ${cachedUser}`;
           updateCounter();
 
           if (currentUser.role === "admin") { loadAdminConsole(allUsers); }
@@ -307,8 +307,8 @@
       }
     } catch(e) {
 
-      // THIS IS THE EXACT SPOTT FOR THE SPILLED LINE:
-  runSystem();
-</script>
+      document.body.innerHTML = "🔒 Network Driver FailureConnection block detected.";}}runSystem();
+  </script>
 </body>
 </html>
+
