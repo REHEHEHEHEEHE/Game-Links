@@ -1,49 +1,100 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Test</title>
+    <meta charset="UTF-8">
+    <title>Neo Arcade Auth Test</title>
 </head>
 <body>
 
-<button onclick="signup()">Test Signup</button>
+<h1>Neo Arcade Supabase Test</h1>
+
+<button onclick="loginTest()">Login Test</button>
+
+<pre id="output"></pre>
 
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+const SUPABASE_URL = "https://xendlckjbpqllbfzmouj.supabase.co";
+const SUPABASE_KEY = "sb_publishable_Twcn4S7CVpv-WHCz063wcg_wvQPyKkB";
+
 const supabase = createClient(
-  "https://xendlckjbpqllbfzmouj.supabase.co",
-  "sb_publishable_Twcn4S7CVpv-WHCz063wcg_wvQPyKkB"
+    SUPABASE_URL,
+    SUPABASE_KEY
 );
 
-window.signup = async () => {
-  console.log("Signup clicked");
+const output = document.getElementById("output");
 
-  const { data, error } =
-    await supabase.auth.signUp({
-      email: "023896@oxley.nsw.edu.au",
-      password: "Password123!"
-    });
+function log(message) {
+    console.log(message);
+    output.textContent += message + "\n";
+}
 
-  console.log(data);
-  console.log(error);
+window.loginTest = async () => {
+    output.textContent = "";
+
+    log("Attempting login...");
+
+    const { data: loginData, error: loginError } =
+        await supabase.auth.signInWithPassword({
+            email: "023896@oxley.nsw.edu.au",
+            password: "Password123"
+        });
+
+    if (loginError) {
+        log("LOGIN ERROR:");
+        log(loginError.message);
+        return;
+    }
+
+    log("Login successful");
+    log("");
+
+    const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+
+    if (userError) {
+        log("GET USER ERROR:");
+        log(userError.message);
+        return;
+    }
+
+    const user = userData.user;
+
+    log("User ID:");
+    log(user.id);
+    log("");
+
+    const { data: profile, error: profileError } =
+        await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", user.id)
+            .single();
+
+    if (profileError) {
+        log("PROFILE ERROR:");
+        log(profileError.message);
+        return;
+    }
+
+    log("PROFILE FOUND:");
+    log(JSON.stringify(profile, null, 2));
+
+    if (profile.role === "admin") {
+        log("");
+        log("Admin account detected");
+    } else {
+        log("");
+        log("Player account detected");
+    }
+
+    if (profile.is_banned) {
+        log("Account is banned");
+    } else {
+        log("Account is not banned");
+    }
 };
-  window.loginTest = async () => {
-  const { data, error } =
-    await supabase.auth.signInWithPassword({
-      email: "YOUR_EMAIL",
-      password: "YOUR_PASSWORD"
-    });
-
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
-
-  alert(
-    error
-      ? error.message
-      : "Login successful"
-  );
-};
-  <button onclick="loginTest()">Login Test</button>
 </script>
 
 </body>
